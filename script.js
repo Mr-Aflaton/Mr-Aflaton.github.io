@@ -72,9 +72,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
 
-    modal.style.display = 'block';
+    if (modal.style.display != "block") {
+      modal.style.display = 'block';
+    } else {
+      modal.style.display = 'none';
+    }
+    
     modalImage.src = imageUrl;
   }
+
+  function closeImage() {
+    modal.style.display = 'none';
+  }
+
+  
+  const close_button = document.getElementsByClassName("close")[0];
+  close_button.addEventListener("click", closeImage);
 
   // Function to load images based on user's selections
   function loadImages() {
@@ -101,5 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Populate year dropdown when the page loads
   populateYearDropdown();
+  populateDayDropdown();
+  
 });
 
