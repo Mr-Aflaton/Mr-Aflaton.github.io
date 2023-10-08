@@ -4,8 +4,7 @@
 
   <script src="https://unpkg.com/d3-array"></script>
   <script src="https://unpkg.com/d3-scale"></script>
-<!-- 	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
-  <script src="./d3.v3.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/globe.gl"></script>
   
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
@@ -16,73 +15,65 @@
 </head>
 
 <body>
-<table>
-  <tr>
-    <td>Year:</td>
-    <td>
-      <select id="year">
-      <option value="1969">1969</option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td>Apollo Mission:</td>
-    <td>
-      <select id="apolloMission">
-        <option value="s11">Apollo 11</option>
-        <option value="s12">Apollo 12</option>
-        <option value="s14">Apollo 14</option>
-        <option value="s15">Apollo 15</option>
-        <option value="s16">Apollo 16</option>
-        <!-- Add options for other Apollo missions if needed -->
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td>Day:</td>
-    <td>
-      <select id="day">
-      <option value="202">July 21</option>
-      </select>
-    </td>
-  </tr>
-</table>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="#">Settings</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <label class="nav-link" for="year">Year:</label>
+          <select class="nav-link" id="year">
+            <option value="1969">1969</option>
+          </select>
+        </li>
+        <li class="nav-item">
+          <label class="nav-link" for="apolloMission">Apollo Mission:</label>
+          <select class="nav-link" id="apolloMission">
+            <option value="s11">Apollo 11</option>
+            <option value="s12">Apollo 12</option>
+            <option value="s14">Apollo 14</option>
+            <option value="s15">Apollo 15</option>
+            <option value="s16">Apollo 16</option>
+            <!-- Add options for other Apollo missions if needed -->
+          </select>
+        </li>
+        <li class="nav-item">
+          <label class="nav-link" for="day">Day:</label>
+          <select class="nav-link" id="day">
+            <option value="202">July 21</option>
+          </select>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <button id="loadImages">Load Images</button>
 <div id="seismometerImages"></div>
 
 <h1 style="text-align:center;">Moon Seismometer Data</h1>
 
-
-<div id="globeViz">
-
-</div>
-
+<div id="globeViz"></div>
 
 <div id="imageModal" class="modal">
   <span class="close">&times;</span>
   <img src="" id="modalImage" alt="Seismometer Image">
 </div>
 
-
-<!-- Example split danger button -->
-
-
-
-
-
 <script>
-  const colorScale = d3.scale.ordinal(['orangered','blue']);
-  
+  const colorScale = d3.scale.ordinal(['orangered', 'blue']);
 
   const labelsTopOrientation = new Set(['Apollo 12', 'Luna 2', 'Luna 20', 'Luna 21', 'Luna 24', 'LCROSS Probe']); // avoid label collisions
-  
+
   function showSeismoImages(seismometer) {
     const selectedYear = document.getElementById('year').value;
     const selectedMonth = document.getElementById('month').value;
     const selectedDay = document.getElementById('day').value;
 
     // Construct the URL for the seismometer image
-    const imageUrl = `https://Mr-Aflaton.github.io/collected_data_png/${seismometer}/${selectedYear}/${dayOfYear}/xa.${seismometer}.00.mh2.${selectedYear}.${dayOfYear}.0.png`;
+    const imageUrl = `http://localhost/collected_data_png/${seismometer}/${selectedYear}/${dayOfYear}/xa.${seismometer}.00.mh2.${selectedYear}.${dayOfYear}.0.png`;
 
     // Display the image in a modal or any other desired way
     openModal(imageUrl);
@@ -105,7 +96,7 @@
         <div>Landing on <i>${new Date(d.date).toLocaleDateString()}</i></div>
       `)
     .onLabelClick(d => showSeismoImages())
-	.labelSize(1	)
+    .labelSize(1)
     (elem);
   var landingSitesInWebsite;
   fetch('./moon_landings.json').then(r => r.json()).then(landingSites => {
