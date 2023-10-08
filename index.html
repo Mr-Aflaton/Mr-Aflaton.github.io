@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<head>
+  <style> body { margin: 0; } </style>
+
+  <script src="https://unpkg.com/d3-array"></script>
+  <script src="https://unpkg.com/d3-scale"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+  
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="style2.css" rel="stylesheet">
+  <script src="./script.js"></script>
+</head>
+
+<body>
+<table>
+  <tr>
+    <td>Year:</td>
+    <td>
+      <select id="year">
+      <option value="1969">1969</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Apollo Mission:</td>
+    <td>
+      <select id="apolloMission">
+        <option value="s11">Apollo 11</option>
+        <option value="s12">Apollo 12</option>
+        <option value="s14">Apollo 14</option>
+        <option value="s15">Apollo 15</option>
+        <option value="s16">Apollo 16</option>
+        <!-- Add options for other Apollo missions if needed -->
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Day:</td>
+    <td>
+      <select id="day">
+      <option value="202">July 21</option>
+      </select>
+    </td>
+  </tr>
+</table>
+<button id="loadImages">Load Images</button>
+<div id="seismometerImages"></div>
+
+<h1 style="text-align:center;">Moon Seismometer Data</h1>
+
+
+<div id="globeViz">
+
+</div>
+
+
+<div id="imageModal" class="modal">
+  <span class="close">&times;</span>
+  <img src="" id="modalImage" alt="Seismometer Image">
+</div>
+
+
+<!-- Example split danger button -->
+
+
+
+
+
+<script>
+  const colorScale = d3.scale.ordinal(['orangered','blue']);
+  
+
+  const labelsTopOrientation = new Set(['Apollo 12', 'Luna 2', 'Luna 20', 'Luna 21', 'Luna 24', 'LCROSS Probe']); // avoid label collisions
+  
+  function showSeismoImages(seismometer) {
+    const selectedYear = document.getElementById('year').value;
+    const selectedMonth = document.getElementById('month').value;
+    const selectedDay = document.getElementById('day').value;
+
+    // Construct the URL for the seismometer image
+    const imageUrl = `http://localhost/collected_data_png/${seismometer}/${selectedYear}/${dayOfYear}/xa.${seismometer}.00.mh2.${selectedYear}.${dayOfYear}.0.png`;
+
+    // Display the image in a modal or any other desired way
+    openModal(imageUrl);
+  }
+  const elem = document.getElementById('globeViz');
+  const moon = Globe()
+    .globeImageUrl('./surface.png')
+    .bumpImageUrl('./bumpmap.png')
+    .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+    .showGraticules(true) // will set this to false later.
+    .showAtmosphere(true) // We set this to true just to give the moon a little cool effect.
+    .labelText('label')
+    .labelSize(1.7)
+    .labelDotRadius(0.4)
+    // .labelDotOrientation(d => labelsTopOrientation.has(d.label) ? 'top' : 'bottom')
+    .labelColor(d => colorScale(d.agency))
+    .labelLabel(d => `
+        <div><b>${d.label}</b></div>
+        <div>${d.agency} - ${d.program} Program</div>
+        <div>Landing on <i>${new Date(d.date).toLocaleDateString()}</i></div>
+      `)
+    .onLabelClick(d => showSeismoImages())
+	.labelSize(1	)
+    (elem);
+  var landingSitesInWebsite;
+  fetch('./moon_landings.json').then(r => r.json()).then(landingSites => {
+    moon.labelsData(landingSites);
+    landingSitesInWebsite = landingSites;
+  });
+</script>
+</body>
+</html>
